@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>741-FACTION</title>
+<title>Questionnaire Site</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
@@ -39,7 +39,7 @@ input{width:100%;padding:12px;border-radius:6px;border:none;margin-top:10px;marg
 #final-link{text-align:center;margin-top:20px;}
 #final-link a{color:#ff2b2b;font-weight:bold;text-decoration:none;text-shadow:0 0 5px #ff2b2b,0 0 10px #ff0000;}
 #adminButton{position:fixed;top:10px;right:10px;padding:10px;cursor:pointer;font-size:18px;background:#111;color:#ff2b2b;border-radius:8px;}
-#adminPanel{background:#222;padding:15px;border-radius:10px;margin-top:20px;max-height:400px;overflow:auto;width:100%;}
+#adminPanel{background:#222;padding:15px;border-radius:10px;margin-top:20px;max-height:500px;overflow:auto;width:100%;}
 #adminPanel table{width:100%;border-collapse:collapse;margin-bottom:10px;}
 #adminPanel th, #adminPanel td{border:1px solid #555;padding:6px;text-align:left;}
 #userList{margin-top:10px;}
@@ -150,7 +150,6 @@ function checkInput(){
 function nextQuestion(){
   const qText = questions[currentQuestion].q;
   const val = questionInput.value.trim();
-  // Age check
   if(qText==="How old are you?"){
     const age = parseInt(val,10);
     if(isNaN(age) || age<11){
@@ -171,7 +170,7 @@ function nextQuestion(){
 }
 
 function finishQuestionnaire(){
-  submitterData["submittedAt"] = new Date().toLocaleString();
+  submitterData["submittedAt"] = new Date().toISOString();
 
   db.collection("submissions").add(submitterData)
     .then(() => {
@@ -196,12 +195,15 @@ function loadSubmissions(){
   table.innerHTML = "<tr><th>Date</th><th>Nickname</th><th>Age</th><th>Country</th><th>Do you accept your fate?</th><th>Telegram @username</th></tr>";
   userList.innerHTML = "";
 
-  db.collection("submissions").orderBy("submittedAt").onSnapshot(snapshot=>{
-    snapshot.docChanges().forEach(change=>{
-      if(change.type === "added"){
-        const data = change.doc.data();
+  db.collection("submissions")
+    .orderBy("submittedAt","desc") // newest first
+    .onSnapshot(snapshot=>{
+      table.innerHTML = "<tr><th>Date</th><th>Nickname</th><th>Age</th><th>Country</th><th>Do you accept your fate?</th><th>Telegram @username</th></tr>";
+      userList.innerHTML = "";
+      snapshot.forEach(doc=>{
+        const data = doc.data();
         const row = `<tr>
-          <td>${data.submittedAt||""}</td>
+          <td>${new Date(data.submittedAt).toLocaleString()||""}</td>
           <td>${data[questions[0].q]||""}</td>
           <td>${data[questions[1].q]||""}</td>
           <td>${data[questions[2].q]||""}</td>
@@ -209,14 +211,14 @@ function loadSubmissions(){
           <td>${data[questions[4].q]||""}</td>
         </tr>`;
         table.innerHTML += row;
+
         if(data[questions[0].q]){
           const li = document.createElement("li");
           li.textContent = data[questions[0].q];
           userList.appendChild(li);
         }
-      }
+      });
     });
-  });
 }
 </script>
 </body>
