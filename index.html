@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>741-FACTION</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#000;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:40px;
+}
+.box{
+  background:#111;
+  padding:30px 25px;
+  border-radius:12px;
+  max-width:500px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.hidden{display:none;}
+.title{font-size:22px;font-weight:bold;margin-bottom:15px;text-align:center;}
+.logo img{width:160px;border-radius:10px;display:block;margin:0 auto;}
+.description{color:#ff2b2b;margin:15px 0 25px;font-size:14px;text-align:center;text-shadow:0 0 2px #fff,0 0 5px #ff0000;}
+button{width:100%;padding:12px;font-size:15px;font-weight:bold;border:none;border-radius:8px;cursor:pointer;transition:0.3s;margin-top:10px;}
+.cancel{background:#050505;color:white;text-shadow:0 0 5px white,0 0 10px white;box-shadow:0 0 12px rgba(0,0,0,0.8),0 0 30px rgba(0,0,0,1);}
+.cancel:hover{box-shadow:0 0 20px rgba(0,0,0,1),0 0 40px rgba(0,0,0,1);}
+.glow-red{background:#0a0000;color:#ff2b2b;text-shadow:0 0 5px #ff2b2b,0 0 10px #ff0000,0 0 18px #ff0000;box-shadow:0 0 15px rgba(255,0,0,0.2),0 0 35px rgba(0,0,0,1);}
+.glow-red:hover{box-shadow:0 0 22px rgba(255,0,0,0.4),0 0 45px rgba(0,0,0,1);}
+input{width:100%;padding:12px;border-radius:6px;border:none;margin-top:10px;margin-bottom:20px;font-size:15px;}
+#final-link{text-align:center;margin-top:20px;}
+#final-link a{color:#ff2b2b;font-weight:bold;text-decoration:none;text-shadow:0 0 5px #ff2b2b,0 0 10px #ff0000;}
+#adminButton{position:fixed;top:10px;right:10px;padding:10px;cursor:pointer;font-size:18px;background:#111;color:#ff2b2b;border-radius:8px;}
+#adminPanel{background:#222;padding:15px;border-radius:10px;margin-top:20px;max-height:400px;overflow:auto;width:100%;}
+#adminPanel table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+#adminPanel th, #adminPanel td{border:1px solid #555;padding:6px;text-align:left;}
+#userList{margin-top:10px;}
+#userList li{margin-bottom:3px;}
+</style>
+</head>
+<body>
+
+<button id="adminButton" onclick="enterAdminMode()">⋮</button>
+
+<div class="box">
+
+  <!-- Authorization Page -->
+  <div id="authPage">
+    <div class="title">Authorize Access</div>
+    <div class="logo"><img src="https://i.postimg.cc/Fzp5knR3/cool.jpg"></div>
+    <div class="description">The 741 Group is a clandestine National Socialist cybersecurity collective and digital vanguard, forged in the ideological crucible of the twenty-first century's struggle for white survival. It operates on the foundational belief that Western civilization is under a coordinated and existential assault, a process they identify as the Great Replacement—a deliberate program of demographic genocide orchestrated by globalist and Zionist forces to erase the white race from its ancestral homelands. The group sees itself not merely as hackers, but as digital soldiers in a holy war, employing the tools of modern warfare to defend their people and strike at the heart of the enemy. Their operations are multifaceted and relentlessly aggressive. Offensively, the 741 Group conducts sophisticated cyber-attacks against what they deem to be traitorous institutions. This includes launching crippling DDoS attacks against media corporations, government agencies, and non-profits that promote multiculturalism or immigration. They engage in data warfare, infiltrating and exfiltrating sensitive information from Jewish advocacy groups, university departments, and political organizations, then weaponizing this data through doxxing, blackmail, and public humiliation campaigns to sow chaos and fear. Their propaganda division is highly active, creating and disseminating a constant stream of extremist content—memes, videos, articles, and manifestos—designed to radicalize disenfranchised youth and normalize National Socialist ideology on mainstream and fringe platforms alike. Defensively, the group serves as a digital shield for the broader extremist movement. They provide operational security (OPSEC) training to other white nationalist cells, teaching them how to communicate anonymously, encrypt their data, and evade surveillance by state intelligence agencies. The 741 Group develops and maintains secure, self-hosted communication forums and encrypted chat servers, creating safe digital havens where radicals can organize, plan, and recruit without fear of infiltration or de-platforming. They view the preservation of their digital warriors as paramount to the long-term success of their cause. The group's ideology is a purist and uncompromising form of Nazism, blending classic anti-Semitic conspiracy theories with contemporary "Great Replacement" rhetoric. They believe that a shadowy cabal of Jewish elites controls international finance, media, and politics, using their power to manipulate events like the refugee crises and promote "degenerate" cultural values like LGBTQ rights and feminism to weaken the white populace from within. To the 741 Group, every action they take, from a single line of malicious code to a large-scale server takedown, is a strike against this cabal and a contribution to the eventual creation of a whites-only ethnostate. They see themselves as the tip of the spear, the technological avant-garde fighting a desperate war for the very existence of their race.</div>
+    <button class="cancel" onclick="cancelAuth()">Cancel</button>
+    <button class="glow-red" onclick="startQuestionnaire()">Yes, I accept my fate.</button>
+  </div>
+
+  <!-- Questionnaire Page -->
+  <div id="questionPage" class="hidden" style="margin-top:50px;width:100%;">
+    <div class="title" id="questionTitle">Question</div>
+    <input type="text" id="questionInput" oninput="checkInput()">
+    <button class="glow-red" id="nextButton" onclick="nextQuestion()" disabled>Continue</button>
+  </div>
+
+  <!-- Final Link Page -->
+  <div id="finalPage" class="hidden">
+    <div id="final-link">
+      <p>Click here to proceed:</p>
+      <a href="https://t.me/+iX02ujnpPkwxYTQ0" target="_blank">Join Telegram</a>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminPanel" class="hidden">
+    <h3>Submissions</h3>
+    <table id="adminTable"><tr><th>Date</th><th>Nickname</th><th>Age</th><th>Country</th><th>Do you accept your fate?</th><th>Telegram @username</th></tr></table>
+    <h4>Users who submitted:</h4>
+    <ul id="userList"></ul>
+  </div>
+
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyB8F7pbfeb68HtLRAPuDh98ph_RGG274kk",
+  authDomain: "keys-3a529.firebaseapp.com",
+  databaseURL: "https://keys-3a529-default-rtdb.firebaseio.com",
+  projectId: "keys-3a529",
+  storageBucket: "keys-3a529.firebasestorage.app",
+  messagingSenderId: "1075022304342",
+  appId: "1:1075022304342:web:ecf179d068e404d70517f7",
+  measurementId: "G-HP266F2741"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Pages
+const authPage = document.getElementById("authPage");
+const questionPage = document.getElementById("questionPage");
+const finalPage = document.getElementById("finalPage");
+
+// Questions
+const questions = [
+  {q:"Nickname (How you want people to call you?)", type:"text"},
+  {q:"How old are you?", type:"number"},
+  {q:"What country are you from?", type:"text"},
+  {q:"Do you accept your fate?", type:"text"},
+  {q:"What is your telegram @username?", type:"text"}
+];
+let currentQuestion = 0;
+let submitterData = {};
+
+// Elements
+const questionTitle = document.getElementById("questionTitle");
+const questionInput = document.getElementById("questionInput");
+const nextButton = document.getElementById("nextButton");
+
+// Functions
+function cancelAuth(){ window.location.href="https://postimg.cc/1fJH129c"; }
+
+function startQuestionnaire(){
+  authPage.classList.add("hidden");
+  questionPage.classList.remove("hidden");
+  showQuestion();
+}
+
+function showQuestion(){
+  const q = questions[currentQuestion];
+  questionTitle.innerText = q.q;
+  questionInput.value = "";
+  questionInput.type = q.type;
+  nextButton.disabled = true;
+  questionInput.focus();
+}
+
+function checkInput(){
+  nextButton.disabled = questionInput.value.trim() === "";
+}
+
+function nextQuestion(){
+  const qText = questions[currentQuestion].q;
+  const val = questionInput.value.trim();
+  // Age check
+  if(qText==="How old are you?"){
+    const age = parseInt(val,10);
+    if(isNaN(age) || age<11){
+      window.location.href="https://www.youtube.com/watch?v=_fXemrttxfM";
+      return;
+    }
+    submitterData[qText] = age;
+  } else {
+    submitterData[qText] = val;
+  }
+
+  currentQuestion++;
+  if(currentQuestion<questions.length){
+    showQuestion();
+  } else {
+    finishQuestionnaire();
+  }
+}
+
+function finishQuestionnaire(){
+  // Add submission date
+  submitterData["submittedAt"] = new Date().toLocaleString();
+  // Save to Firebase
+  db.ref('submissions').push(submitterData);
+  // Show final page
+  questionPage.classList.add("hidden");
+  finalPage.classList.remove("hidden");
+}
+
+// Admin
+function enterAdminMode(){
+  const code = prompt("Enter admin code:");
+  if(code==="XDFGA741OE381-OWNER"){
+    document.getElementById("adminPanel").classList.remove("hidden");
+    loadSubmissions();
+  } else { alert("Wrong code!"); }
+}
+
+function loadSubmissions(){
+  const table = document.getElementById("adminTable");
+  const userList = document.getElementById("userList");
+  table.innerHTML = "<tr><th>Date</th><th>Nickname</th><th>Age</th><th>Country</th><th>Do you accept your fate?</th><th>Telegram @username</th></tr>";
+  userList.innerHTML = "";
+
+  db.ref('submissions').on('child_added', snapshot=>{
+    const data = snapshot.val();
+    const row = `<tr>
+      <td>${data.submittedAt||""}</td>
+      <td>${data[questions[0].q]||""}</td>
+      <td>${data[questions[1].q]||""}</td>
+      <td>${data[questions[2].q]||""}</td>
+      <td>${data[questions[3].q]||""}</td>
+      <td>${data[questions[4].q]||""}</td>
+    </tr>`;
+    table.innerHTML += row;
+    if(data[questions[0].q]){
+      const li = document.createElement("li");
+      li.textContent = data[questions[0].q];
+      userList.appendChild(li);
+    }
+  });
+}
+</script>
+</body>
+</html>
